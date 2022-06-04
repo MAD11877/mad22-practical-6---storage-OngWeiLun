@@ -57,7 +57,7 @@ public class ListAdapter extends RecyclerView.Adapter<UserViewHolder> {
             @NonNull UserViewHolder holder,
             int position
     ){
-        User s = data.get(position);
+        User s = data.get(getHolderPos(holder));
         holder.description.setText(s.description);
         holder.username.setText(s.name);
 
@@ -72,7 +72,7 @@ public class ListAdapter extends RecyclerView.Adapter<UserViewHolder> {
                 Intent MainActivity = new Intent(listActivity,
                         MainActivity.class);
 
-                MainActivity.putExtra("username",s.name + "-" + Integer.toString(s.id));
+                MainActivity.putExtra("username",s.name);
                 MainActivity.putExtra("description",s.description);
                 MainActivity.putExtra("follow",s.followed);
                 MainActivity.putExtra("id",s.id);
@@ -85,12 +85,15 @@ public class ListAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
             }
         });
-
-
     }
 
     @Override
     public int getItemCount(){
         return data.size();
+    }
+
+    public int getHolderPos(UserViewHolder holder){
+        int position = holder.getAdapterPosition();
+        return position;
     }
 }

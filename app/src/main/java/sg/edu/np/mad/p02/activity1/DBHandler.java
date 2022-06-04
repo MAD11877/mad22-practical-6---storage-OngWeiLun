@@ -21,6 +21,10 @@ public class DBHandler extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db){
+
+        //Prevent stacking of data
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+
         String CREATE_USER_TABLE = "CREATE TABLE " +
                 TABLE_USER + "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_NAME + " TEXT," + COLUMN_DESCRIPTION + " TEXT," +
@@ -76,12 +80,18 @@ public class DBHandler extends SQLiteOpenHelper{
         return userList;
     }
 
-    //Populating DB
-    public void populateDB(ArrayList<User> uList){
-        for (int i = 0; i < uList.size(); i++){
-            addUser(uList.get(i));
-        }
-    }
+    public void updateUser(User user){
+        String query = "SELECT " + COLUMN_FOLLOWED +" FROM " + TABLE_USER
+                + " WHERE " + COLUMN_ID + " = " + Integer.toString(user.getId());
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FOLLOWED, user.followed);
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query,null);
 
+        if(cursor.moveToFirst()){
+            db.update(TABLE_USER,values, Integer.toString(user.getId()),null);
+        }
+
+    }
 
 }
