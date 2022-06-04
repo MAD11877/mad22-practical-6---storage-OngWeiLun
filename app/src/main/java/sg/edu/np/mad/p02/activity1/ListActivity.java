@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,8 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         DBHandler db = new DBHandler(this ,null,null,1);
+        createList(db);
+
         ArrayList<User> userList = db.getUsers();
 
         Log.d("ListSize","Length: " + userList.size());
@@ -64,7 +67,7 @@ public class ListActivity extends AppCompatActivity {
         listRV.setAdapter(l_adapter);
     }
 
-    public ArrayList<User> createList(){
+    public void createList(DBHandler db){
 
         ArrayList<User> uList = new ArrayList<>();
 
@@ -83,10 +86,8 @@ public class ListActivity extends AppCompatActivity {
             String desc = Integer.toString(rand.nextInt(1000000000));
 
             User newUser = new User("Name-" + name_num,"Description-" + desc, 0, followed);
-            DBHandler db = new DBHandler(this, null, null, 1);
             db.addUser(newUser);
         }
-        return uList;
     }
 
 /*    public ArrayList<User> createList(){
