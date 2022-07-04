@@ -24,20 +24,22 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        FirebaseDatabase db = FirebaseDatabase.getInstance("https://user-database---practical-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
         Button loginBtn = findViewById(R.id.buttonLogin);
 
         loginBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                Toast.makeText(Login.this, "Clicked", Toast.LENGTH_SHORT).show();
+
                 EditText editUsername = findViewById(R.id.etUsername);
                 EditText editPassword = findViewById(R.id.etPassword);
 
                 String username = editUsername.getText().toString();
                 String password = editPassword.getText().toString();
 
-                DatabaseReference myRef = db.getReference("Users/" + username);
+                DatabaseReference myRef = db.getReference("Users/"+username);
 
 
                 myRef.addValueEventListener(new ValueEventListener() {
@@ -47,9 +49,15 @@ public class Login extends AppCompatActivity {
                             Toast.makeText(Login.this, "Username does not exist", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        String dbpassword = snapshot.getValue().toString();
+                        Log.d("Check","Running");
 
-                        if(dbpassword != password){
+                        String dbPassword = snapshot.getValue().toString();
+
+                        Log.d("Check",dbPassword);
+
+                        Log.d("Password:",dbPassword);
+
+                        if(!dbPassword.equals(password)){
                             Toast.makeText(Login.this, "Wrong password", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -60,7 +68,7 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        Toast.makeText(Login.this, "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
